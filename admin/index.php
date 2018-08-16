@@ -1,8 +1,8 @@
 <?php 
   session_start();
-  if (!isset($_SESSION['userid']) || !isset($_COOKIE['userid'])):
-    header("Location: al.php");
-  endif
+  if (!isset($_SESSION['userid'])):
+    header("Location: admin_login.php");
+  endif;
  ?>
 
 <?php 

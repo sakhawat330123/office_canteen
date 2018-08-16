@@ -12,6 +12,6 @@
   }
   
 
-  echo "Database Connection Successfull";
+  // echo "Database Connection Successfull";
 
  ?>

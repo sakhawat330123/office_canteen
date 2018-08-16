@@ -1,37 +1,44 @@
-<?php 
+<?php
   session_start();
-  if (isset($_SESSION['userid']) || isset($_COOKIE['userid'])) {
-    header("Location: index.php");
-  }
- ?>
-<?php 
+  if (isset($_SESSION['userid'])) {
+     header("Location: index.php");
+   }
+
+
   include "includes/connection.php";
-  if (isset($_REQUEST['adminLoginBtn'])) {
-    $adminLoginId = mysqli_real_escape_string($con, $_REQUEST['loginadmin']);
-    $adminLoginPass = md5(mysqli_real_escape_string($con, $_REQUEST['loginAdminPass']));
-    $rememberMe = isset($_REQUEST['rememberMe'])==true?1:0;
+  include "includes/function.php";
 
-    $logQuery = "";
-    $adminLogDb = $con->query($adminLoginQuery);
+  $iderror = $passerror = "";
+  $admin_id = $admin_pass = "";
 
-    $adminLoginRow = $adminLogDb->num_rows;
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($_POST["loginadmin"])) {
+      $iderror = "Email is required";
+    }else{
+      $admin_id = safe_input($_POST["loginadmin"]);
+    }
 
-    if ($adminLoginRow == 1) {
-      $_SESSION['userid']= $adminLoginId;
+    if (empty($_POST["loginAdminPass"])) {
+      $passerror = "Email is required";
+    }else{
+      $admin_pass = safe_input($_POST["loginAdminPass"]);
+    }
+    
+    
 
-      if ($rememberMe==1) {
-        setcookie('userid', $adminLoginId, time()+86400*15, '/');
-      }
+    $admin_check = "SELECT * FROM `admin` WHERE `admin_id` = $admin_id && `admin_password` = $admin_pass";
+    $admin = $con->query($admin_check);
+
+    $admin_rows = $admin->num_rows;
+
+    if ($admin_rows == 1) {
+      $_SESSION['userid']=$admin_id;
       header("Location: index.php");
     }else{
-      header("Location: al.php");
+      header("Location: admin_login.php");
     }
   }
-
  ?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -54,8 +61,8 @@
           <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
             <div class="form-group">
               <label for="loginadmin">admin login</label>
-              <input type="text" class="form-control" name="loginadmin" id="loginadmin" placeholder="20160360" required><br>
-              <input type="password" class="form-control" name="loginAdminPass" id="loginAdminPass" placeholder="*******" required><br>
+              <input type="text" class="form-control" name="loginadmin" id="loginadmin" placeholder="" ><span> <?php echo $iderror; ?></span> <br>
+              <input type="password" class="form-control" name="loginAdminPass" id="loginAdminPass" placeholder="" ><span class="text-danger"> <?php echo $passerror; ?></span><br>
               <label class="form-check-label">
                 <input class="form-check-input" name="rememberMe" type="checkbox"> Remember me
               </label>
