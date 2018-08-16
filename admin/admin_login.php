@@ -1,18 +1,17 @@
 <?php 
   session_start();
-  if (!isset($_SESSION['userid']) || !isset($_COOKIE['userid'])) {
-    header("Location: admin_login.php");
+  if (isset($_SESSION['userid']) || isset($_COOKIE['userid'])) {
+    header("Location: index.php");
   }
-
  ?>
 <?php 
   include "includes/connection.php";
   if (isset($_REQUEST['adminLoginBtn'])) {
-    $adminLoginId = trim(mysqli_real_escape_string($con, $_REQUEST['loginadmin']));
-    $adminLoginPass = md5(trim(mysqli_real_escape_string($con, $_REQUEST['loginAdminPass'])));
+    $adminLoginId = mysqli_real_escape_string($con, $_REQUEST['loginadmin']);
+    $adminLoginPass = md5(mysqli_real_escape_string($con, $_REQUEST['loginAdminPass']));
     $rememberMe = isset($_REQUEST['rememberMe'])==true?1:0;
 
-    $adminLoginQuery = "SELECT * FROM `adminlogin` WHERE `loginID`=$adminLoginId && `loginPass`='$adminLoginPass'";
+    $logQuery = "";
     $adminLogDb = $con->query($adminLoginQuery);
 
     $adminLoginRow = $adminLogDb->num_rows;
