@@ -2,7 +2,7 @@
   define('SERVERNAME', 'localhost');
   define('USERNAME', 'root');
   define('PASSWORD', '');
-  define('DATABASENAME', 'ctn');
+  define('DATABASENAME', 'office_canteen');
 
 
   $con = new mysqli(SERVERNAME, USERNAME, PASSWORD, DATABASENAME);
@@ -12,6 +12,6 @@
   }
   
 
-  // echo "Database Connection Successfull";
+  echo "Database Connection Successfull";
 
  ?>
